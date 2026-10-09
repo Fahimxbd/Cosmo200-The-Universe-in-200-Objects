@@ -43,6 +43,53 @@ npm run preview
 
 No API key, account, database, analytics, or paid service is needed to explore. Catalogue and fonts are local; NASA images need an internet connection. Search and educational text continue to work if an image fails. A non-WebGL fallback preserves the searchable catalogue.
 
+
+## Android / Termux setup
+
+You can clone and run the React/Vite project **locally on an Android phone with Termux**. This starts a development website in your phone's browser; it **does not install an Android APK** or replace the public Cloudflare Workers deployment.
+
+1. Install a current Termux release from [F-Droid](https://f-droid.org/packages/com.termux/) or the official [Termux GitHub releases](https://github.com/termux/termux-app/releases). Open Termux and run:
+
+   ```sh
+   pkg update -y && pkg upgrade -y
+   pkg install -y git nodejs-lts
+   node --version
+   npm --version
+   ```
+
+   Use Node.js **22.12 or later** (check the reported version). If your package repository provides an older version, update Termux/package repositories before continuing.
+
+2. Download the project and install its dependencies:
+
+   ```sh
+   cd ~
+   git clone https://github.com/Fahimxbd/Cosmo200-The-Universe-in-200-Objects.git
+   cd Cosmo200-The-Universe-in-200-Objects
+   npm ci
+   ```
+
+3. Start the local Vite development server:
+
+   ```sh
+   npm run dev -- --port 5173
+   ```
+
+   Open **http://127.0.0.1:5173/** in Chrome or another Android browser on the **same phone**. Leave the Termux session running while you use the site. You can also run `termux-open-url http://127.0.0.1:5173/` in a separate Termux session. Press **Ctrl+C** in the server session to stop it.
+
+4. Optional — on a later visit, update the checkout:
+
+   ```sh
+   cd ~/Cosmo200-The-Universe-in-200-Objects
+   git pull --ff-only
+   npm ci
+   npm run dev -- --port 5173
+   ```
+
+   `git pull --ff-only` requires a clean, compatible checkout; save any local edits before updating.
+
+You can optionally run `npm test` and `npm run build` after installation. **Note:** Vite/Rollup and other development dependencies may use platform-specific native packages; Android/Termux compatibility is not guaranteed for every device or architecture. Rendering also depends on browser WebGL support and your phone's GPU. If installation fails due to a native package, use a supported desktop/Linux build environment or the public [Cloudflare Workers website](https://cosmo200-the-universe-in-200-objects.fahimprivateuser-d8a.workers.dev/) instead.
+
+
 ## Deploy to Cloudflare Workers
 
 ### Cloudflare Workers Builds (dashboard)
