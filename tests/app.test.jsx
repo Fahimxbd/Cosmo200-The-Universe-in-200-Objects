@@ -1,0 +1,12 @@
+import React from 'react';
+import {test,expect,vi,beforeEach,afterEach} from 'vitest';
+import {render,screen,fireEvent,waitFor,cleanup,act} from '@testing-library/react';
+import data from '../public/data/objects.json';
+import App from '../src/App.jsx';
+vi.mock('../src/components/UniverseCanvas',()=>({default:({objects,selected})=><div data-testid="canvas-stub" data-count={objects.length}>{selected.name} scene</div>}));
+beforeEach(()=>{global.fetch=vi.fn().mockResolvedValue({ok:true,json:async()=>structuredClone(data)});});
+afterEach(()=>{cleanup();vi.useRealTimers();vi.restoreAllMocks();});
+test('App loads local catalogue and search selects Andromeda',async()=>{render(<App/>);await screen.findByRole('heading',{name:'Galaxies'});fireEvent.change(screen.getByRole('textbox',{name:'Search 200 objects'}),{target:{value:'Search Andromeda'}});fireEvent.submit(screen.getByRole('search'));await screen.findByRole('heading',{name:'Andromeda'});expect(screen.getByTestId('canvas-stub').getAttribute('data-count')).toBe('20');});
+test('All-object overview exposes exactly 200 and collection navigation restores filtering',async()=>{render(<App/>);await screen.findByRole('heading',{name:'Galaxies'});fireEvent.click(screen.getByRole('button',{name:'View all 200 objects'}));expect(screen.getByTestId('canvas-stub').getAttribute('data-count')).toBe('200');fireEvent.click(screen.getByRole('button',{name:/Planets & moons Worlds to discover/}));expect(screen.getByTestId('canvas-stub').getAttribute('data-count')).toBe('94');await screen.findByRole('heading',{name:'Sun'});});
+test('Tour advances through all six scales and finishes paused',async()=>{render(<App/>);await screen.findByRole('heading',{name:'Galaxies'});vi.useFakeTimers();fireEvent.click(screen.getByRole('button',{name:'Take a tour'}));expect(screen.getByRole('heading',{name:'Observable Universe'})).toBeTruthy();for(let i=0;i<5;i++)await act(async()=>vi.advanceTimersByTime(20000));expect(screen.getByRole('heading',{name:'Earth'})).toBeTruthy();await act(async()=>vi.advanceTimersByTime(20000));expect(screen.getByRole('button',{name:'Resume'})).toBeTruthy();});
+test('Catalogue failure has a retry state',async()=>{global.fetch=vi.fn().mockResolvedValue({ok:false});render(<App/>);await screen.findByRole('heading',{name:"We couldn't open the atlas."});expect(screen.getByRole('button',{name:'Try again'})).toBeTruthy();});
