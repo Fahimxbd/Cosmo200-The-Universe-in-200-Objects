@@ -2,6 +2,10 @@
 
 A free, MIT-licensed astronomy atlas for schools, colleges, universities, and curious minds. Built with **React 18, Vite, React Three Fiber, Three.js, Drei, Tailwind CSS, and Framer Motion**. Hosting targets **Cloudflare Workers only**, with source and CI on **GitHub**.
 
+## Live Website
+
+[**Explore Cosmo200 on Cloudflare Workers →**](https://cosmo200-the-universe-in-200-objects.fahimprivateuser-d8a.workers.dev/)
+
 ## Explore
 
 - Exactly **200 unique named objects** in local `public/data/objects.json`, served at `/data/objects.json`.
@@ -50,7 +54,7 @@ Connect this GitHub repository to a new Worker named **cosmo200**.
 - Build command: `npm run build`
 - Deploy command: `npx wrangler deploy`
 
-`wrangler.jsonc` serves `dist` using Workers Static Assets with SPA fallback. No Cloudflare Pages, external host, database, or runtime secrets are required. The final `workers.dev` URL is supplied by Cloudflare after successful deployment; do not treat a guessed URL as live.
+`wrangler.jsonc` serves `dist` using Workers Static Assets with SPA fallback. No Cloudflare Pages, external host, database, or runtime secrets are required. Cloudflare Workers website: [**https://cosmo200-the-universe-in-200-objects.fahimprivateuser-d8a.workers.dev/**](https://cosmo200-the-universe-in-200-objects.fahimprivateuser-d8a.workers.dev/). Verify the deployment using the checklist below.
 
 ### GitHub Actions alternative
 
